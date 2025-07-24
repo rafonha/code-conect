@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        compBackground: "#171D1F",
+      },
+      spacing: {
+        75: "75rem",
       },
     },
   },

@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Prompt } from "next/font/google";
 import "./globals.css";
 import { Aside } from "./components/Aside";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata: Metadata = {
   title: "Code conect",
   description: "Rede social para devs",
 };
+
+const prompt = Prompt({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -26,11 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Aside />
-        {children}
+      <body className={prompt.className} suppressHydrationWarning={true}>
+        <div className="my-14 w-75 flex gap-7">
+          <Aside />
+          {children}
+        </div>
       </body>
     </html>
   );
