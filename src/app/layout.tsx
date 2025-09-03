@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Prompt } from "next/font/google";
 import "./globals.css";
-import { Aside } from "./components/Aside";
+import { Aside } from "../components/Aside";
 
 export const metadata: Metadata = {
   title: "Code conect",

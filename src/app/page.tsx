@@ -1,26 +1,32 @@
-import { CardPost } from "./components/CardPost";
+import Link from "next/link";
+import { CardPost } from "../components/CardPost";
+import { Post } from "../components/CardPost";
 
-export default function Home() {
-  const post = {
-    id: 1,
-    cover:
-      "https://raw.githubusercontent.com/viniciosneves/code-connect-assets/main/posts/introducao-ao-react.png",
-    title: "Introdução ao React",
-    slug: "introducao-ao-react",
-    body: "Neste post, vamos explorar os conceitos básicos do React, uma biblioteca JavaScript para construir interfaces de usuário. Vamos cobrir componentes, JSX e estados.",
-    markdown:
-      "```javascript\nfunction HelloComponent() {\n  return <h1>Hello, world!</h1>;\n}\n```",
-    author: {
-      id: 101,
-      name: "Ana Beatriz",
-      username: "anabeatriz_dev",
-      avatar:
-        "https://raw.githubusercontent.com/viniciosneves/code-connect-assets/main/authors/anabeatriz_dev.png",
-    },
-  };
+async function getPosts(page: number) {
+  try {
+    const response = await fetch(`http://localhost:3042/posts?_page=${page}&_per_page=6`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch posts");
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    return { data: [], prev: null, next: null };
+  }
+}
+
+export default async function Home({ searchParams }: { searchParams: { page: number } }) {
+  const currentPage = searchParams.page || 1;
+  const { data: posts, prev, next } = await getPosts(currentPage);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <CardPost post={post} />
-    </div>
+    <main className="min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        {posts.map((post: Post) => (
+          <CardPost key={post.id} post={post} />
+        ))}
+      </div>
+      {prev && <Link href={`/?page=${prev}`} className="text-white">Página anterior</Link>}
+      {next && <Link href={`/?page=${next}`} className="text-white">Próxima página</Link>}
+    </main>
   );
 }
